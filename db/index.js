@@ -3,10 +3,10 @@ var Schema = mongoose.Schema;
 
 require('dotenv').config();
 
-console.log(",env", process.env.MONGODB_URI);
+var uri = process.env.MONGODB_URI || 'mongodb://localhost/firebnb';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(uri);
 
 var db = mongoose.connection;
 
@@ -38,16 +38,16 @@ var calendarSchema = new Schema (
 }
 );
 
-
-
 var amenitiesSchema = new Schema (
 {
-  //id: {type: Number, required: true},
+  id: {type: Number, required: true},
   name:  {type: String, required: true},
   desc:  {type: String, required: true},
   additional: String,
   type: {type: String, required: true}
 });
+
+var Amenities = mongoose.model('Amenities', amenitiesSchema);
 
 var propertySchema = new Schema (
 {
@@ -65,17 +65,11 @@ var propertySchema = new Schema (
   bedrooms: {type: Number, required: true},
   baths: {type: Number, required: true},
  // calendar: { type: Schema.Types.ObjectId, ref: 'Calendar'},
-  amenities: [{
-    basic: [{
-      amenity_id: {type: Schema.Types.ObjectId, ref: 'Amenities'}
-    }],
-    facilities: [{
-      amenity_id: {type: Schema.Types.ObjectId, ref: 'Amenities'}
-    }],
-    dining: [{
-      amenity_id: {type: Schema.Types.ObjectId, ref: 'Amenities'}
-    }]
-  }],
+  amenitiesBasic: [{type: Schema.Types.ObjectId, ref: 'Amenities'}],
+  amenitiesFacilities: [{type: Schema.Types.ObjectId, ref: 'Amenities'}],
+  amenitiesDining: [{type: Schema.Types.ObjectId, ref: 'Amenities'}],
+  amenitiesKitchen: [{type: Schema.Types.ObjectId, ref: 'Amenities'}],
+
   images: [{
     link: {type: String, required: true}
   }]
@@ -84,7 +78,7 @@ var propertySchema = new Schema (
 var Property  = mongoose.model('Property', propertySchema);
 var Host = mongoose.model('Host', hostSchema);
 var Calendar = mongoose.model('Calendar', calendarSchema);
-var Amenities = mongoose.model('Amenities', amenitiesSchema);
+
 
 module.exports = {
   Property: Property,
