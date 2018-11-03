@@ -4,41 +4,43 @@ import { FormGroup, Form, InputGroup, FormControl, Button } from 'react-bootstra
 import {DropdownButton, MenuItem, NavDropdown, Input }  from 'react-bootstrap';
 import Bootstrap from 'bootstrap';
 
-class Header extends React.Component {
+class FirebnbHeader extends React.Component {
 
   constructor(props) {
     super(props);
     this.onDropdownSelected = this.onDropdownSelected.bind(this);
     this.fillDropdownOptions = this.fillDropdownOptions.bind(this);
-    console.log("props", this.props.properties);
+    console.log("header constructor / props: ", this.props);
+    this.items = this.fillDropdownOptions();
   }
 
-  onDropdownSelected() {
-    console.log("Got here!")
+  onDropdownSelected(e) {
+    this.props.setCurrentProperty(e);
   }
 
   fillDropdownOptions() {
     let items = [];
-     for (let i = 0; i <= this.props.properties.length; i++) {
-          items.push(<option key={i} value={this.props.properties[i].shortDesc}>{i}</option>);
-     }
+    for (let i = 0; i < this.props.properties.length; i++) {
+      items.push( <MenuItem eventKey={i} key={i}>{i}-{this.props.properties[i].shortDesc}</MenuItem>);
+    }
 
-     let menuItems = this.props.properties.map((property, index) => {
-               <MenuItem eventKey={index} value={property.shortDesc}>{index}-{property.shortDesc}</MenuItem>
-              }
-      );
-     console.log("items", this.props.properties.shortDesc);
-     return items;
+     // let menuItems = this.props.properties.map((property, index) => {
+     //           <MenuItem eventKey={index} value={property.shortDesc}>{index}-{property.shortDesc}</MenuItem>
+     //          }
+     //  );
+
+    console.log("menuItems", items);
+    return items;
   }
 
   render() {
-
       let properties = this.props.properties;
       // let menuItems = properties.map((property, index) => {
       //          <MenuItem eventKey={index} value={property.shortDesc}>{index}-{property.shortDesc}</MenuItem>
       //         }
       // );
       // console.log("menuItems", menuItems);
+
 
       return (
         <Navbar inverse fixedTop fluid={true}>
@@ -61,9 +63,9 @@ class Header extends React.Component {
                 id={`dropdown-basic-${0}`}
                 title="Select Firebnb property"
                 margine={20}
+                onSelect={this.onDropdownSelected}
                >
-                <MenuItem eventKey={0}>0-{this.props.properties[0].shortDesc}</MenuItem>
-
+               {this.items}
             </NavDropdown>
             <NavItem eventKey={1} href="#">
               Become a Host
@@ -87,7 +89,7 @@ class Header extends React.Component {
   }
 }
 
-export default Header;
+export default FirebnbHeader;
 
 // <MenuItem eventKey={0}>0-{this.props.properties[0].shortDesc}</MenuItem>
 //             <MenuItem eventKey={1}>0-{this.props.properties[1].shortDesc}</MenuItem>
